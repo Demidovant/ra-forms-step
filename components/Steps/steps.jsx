@@ -15,10 +15,10 @@ const Steps = () => {
           const updatedEntries = prevEntries.map(entry =>
             entry.date === date ? { ...entry, distance: entry.distance + distanceNum } : entry
           );
-          return updatedEntries.sort((a, b) => new Date(b.date.split('.').reverse().join('-')) - new Date(a.date.split('.').reverse().join('-')));
+          return updatedEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
         } else {
           const newEntries = [...prevEntries, { date, distance: distanceNum }];
-          return newEntries.sort((a, b) => new Date(b.date.split('.').reverse().join('-')) - new Date(a.date.split('.').reverse().join('-')));
+          return newEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
         }
       });
       setDate('');
@@ -36,20 +36,21 @@ const Steps = () => {
         <div className="form-item">
           <label htmlFor="date">Дата (ДД.ММ.ГГ)</label>
           <input
-            type="text"
+            type="date"
             id="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            placeholder="ДД.ММ.ГГ"
           />
         </div>
         <div className="form-item">
           <label htmlFor="distance">Пройдено км</label>
           <input
-            type="text"
+            type="number"
             id="distance"
             value={distance}
             onChange={(e) => setDistance(e.target.value)}
+            min="0"
+            step="0.1"
             placeholder="Км"
           />
         </div>
@@ -67,7 +68,7 @@ const Steps = () => {
           <tbody>
             {entries.map(entry => (
               <tr key={entry.date}>
-                <td>{entry.date}</td>
+                <td>{new Date(entry.date).toLocaleDateString('ru-RU')}</td>
                 <td>{entry.distance.toFixed(1)}</td>
                 <td>
                   <button onClick={() => handleDeleteEntry(entry.date)} className="delete-btn">✘</button>
